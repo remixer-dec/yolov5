@@ -105,10 +105,10 @@ def check_requirements(file='requirements.txt', exclude=()):
             pkg.require(r)
         except Exception as e:  # DistributionNotFound or VersionConflict if requirements not met
             n += 1
-            print(f"{prefix} {e.req} not found and is required by YOLOv5, attempting auto-update...")
-            print(subprocess.check_output(f"pip install '{e.req}'", shell=True).decode())
+            print(f"{prefix} {e.req} not found and is required by original YOLOv5, auto-update is disabled.")
+            #print(subprocess.check_output(f"pip install '{e.req}'", shell=True).decode())
 
-    if n:  # if packages updated
+    if False:  # if packages updated
         s = f"{prefix} {n} package{'s' * (n > 1)} updated per {file.resolve()}\n" \
             f"{prefix} ⚠️ {colorstr('bold', 'Restart runtime or rerun command for updates to take effect')}\n"
         print(emojis(s))  # emoji-safe
@@ -400,7 +400,7 @@ def box_iou(box1, box2):
     area2 = box_area(box2.T)
 
     # inter(N,M) = (rb(N,M,2) - lt(N,M,2)).clamp(0).prod(2)
-    inter = (torch.min(box1[:, None, 2:], box2[:, 2:]) - torch.max(box1[:, None, :2], box2[:, :2])).clamp(0).prod(2)
+    inter = (torch.min(box1[:, None, 2:].to(torch.float32), box2[:, 2:].to(torch.float32)) - torch.max(box1[:, None, :2].to(torch.float32), box2[:, :2].to(torch.float32))).clamp(0).prod(2)
     return inter / (area1[:, None] + area2 - inter)  # iou = inter / (area1 + area2 - inter)
 
 
@@ -461,10 +461,10 @@ def non_max_suppression(prediction, conf_thres=0.25, iou_thres=0.45, classes=Non
         # Detections matrix nx6 (xyxy, conf, cls)
         if multi_label:
             i, j = (x[:, 5:] > conf_thres).nonzero(as_tuple=False).T
-            x = torch.cat((box[i], x[i, j + 5, None], j[:, None].float()), 1)
+            x = torch.cat((box[i].to(torch.float32), x[i, j + 5, None].to(torch.float32), j[:, None].to(torch.float32)), 1)
         else:  # best class only
             conf, j = x[:, 5:].max(1, keepdim=True)
-            x = torch.cat((box, conf, j.float()), 1)[conf.view(-1) > conf_thres]
+            x = torch.cat((box.to(torch.float32), conf.to(torch.float32), j.to(torch.float32)), 1)[conf.view(-1) > conf_thres]
 
         # Filter by class
         if classes is not None:
