@@ -8,7 +8,7 @@ For all the information about YOLOv5, please refer to the [original repo](https:
 - You might need to run ```pip install pillow<7``` if you face an error about PILLOW_VERSION not existing in PIL  
 
 ### Model format
-- Pretrained models published by Ultralytics use a new compressed format. You can import these models in an environment with new versions of pytorch and export them in old format. See convert_model.ipynb for the code.  
+- Pretrained models published by Ultralytics use a new compressed format. You can import these models in an environment with new versions of pytorch and export them in old format. See convert_model.ipynb for the code. [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/remixer-dec/yolov5/blob/master/convert_model.ipynb)  
 
 ### Support
 - This port was made once, tested successfully (with GTX780/CUDA10.2), and won't be supported in the future (Pull requests are welcome!). If something goes wrong, try replacing files causing the errors with ones from the original repo.  
