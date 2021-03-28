@@ -115,6 +115,18 @@ class Hardswish(Module):
 
 torch.nn.Hardswish = Hardswish
 
+from utils.activations import Hardswish as OriginalHardswish
+
+def hardswish(input, inplace=False):
+	return OriginalHardswish.forward(input)
+
+F.hardswish = hardswish
+
+#uncomment this if you want an export-friendly version of nn.SiLU
+#from utils.activations import SiLU as OriginalSiLU
+#torch.nn.modules.activation.SiLU = OriginalSiLU
+#torch.nn.SiLU = OriginalSiLU
+
 #the code bellow is necessary only for training
 #it is intended to replace missing function and might be not accurate
 
